@@ -1,0 +1,49 @@
+{
+  "name": "@cyberash/dev-tooling",
+  "version": "1.0.0",
+  "description": "Shareable Biome base config and a deterministic comment linter for TypeScript/JavaScript projects.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyberash-dev/dev-tooling.git"
+  },
+  "keywords": [
+    "biome",
+    "biome-config",
+    "comment-lint",
+    "comments",
+    "linter",
+    "code-style",
+    "typescript"
+  ],
+  "bin": {
+    "lint-comments": "bin/lint-comments.mjs",
+    "verify-comment-clean": "bin/verify-comment-clean.mjs"
+  },
+  "files": [
+    "biome.base.json",
+    "bin",
+    "lib",
+    "presets",
+    "skills",
+    "AGENTS.md"
+  ],
+  "scripts": {
+    "test": "node tests/run-all.mjs",
+    "prepublishOnly": "npm test"
+  },
+  "dependencies": {
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "@biomejs/biome": ">=2.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
