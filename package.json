@@ -1,5 +1,5 @@
 {
-  "name": "@cyberash/dev-tooling",
+  "name": "@cyberash-dev/dev-tooling",
   "version": "1.0.0",
   "description": "Shareable Biome base config and a deterministic comment linter for TypeScript/JavaScript projects.",
   "type": "module",

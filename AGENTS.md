@@ -1,4 +1,4 @@
-# AGENTS.md — adopting @cyberash/dev-tooling
+# AGENTS.md — adopting @cyberash-dev/dev-tooling
 
 Instructions for any AI coding agent (Claude Code, Codex, Cursor, Aider, …)
 adopting this tooling in a target repository. This package ships a strict Biome
@@ -9,12 +9,12 @@ anchors / ticket refs are opt-in.
 
 1. **Install** (peer Biome alongside, so both bins land in `node_modules/.bin`):
    ```sh
-   npm install -D @cyberash/dev-tooling @biomejs/biome
+   npm install -D @cyberash-dev/dev-tooling @biomejs/biome
    ```
 2. **`biome.json`** — extend the base:
    ```jsonc
    { "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
-     "extends": ["@cyberash/dev-tooling/biome.base.json"] }
+     "extends": ["@cyberash-dev/dev-tooling/biome.base.json"] }
    ```
 3. **Lint scripts** in `package.json` (point the linter at the source dirs):
    ```jsonc
@@ -25,7 +25,7 @@ anchors / ticket refs are opt-in.
    markers, add a `comment-lint.config.mjs` (see README → Configuration). For
    Spec-Driven Development, one line:
    ```js
-   import sdd from "@cyberash/dev-tooling/presets/sdd.mjs";
+   import sdd from "@cyberash-dev/dev-tooling/presets/sdd.mjs";
    export default { ...sdd, specDirs: ["spec"] };
    ```
    Skip this step entirely for a plain repo.

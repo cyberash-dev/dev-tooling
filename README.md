@@ -1,4 +1,4 @@
-# @cyberash/dev-tooling
+# @cyberash-dev/dev-tooling
 
 Shareable dev tooling for any TypeScript/JavaScript project:
 
@@ -16,7 +16,7 @@ agent-facing adoption runbook.
 ## Install
 
 ```sh
-npm install -D @cyberash/dev-tooling @biomejs/biome
+npm install -D @cyberash-dev/dev-tooling @biomejs/biome
 ```
 
 `@biomejs/biome` is a peer dependency: install it directly so its bin and
@@ -28,7 +28,7 @@ npm install -D @cyberash/dev-tooling @biomejs/biome
 // biome.json
 {
   "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
-  "extends": ["@cyberash/dev-tooling/biome.base.json"]
+  "extends": ["@cyberash-dev/dev-tooling/biome.base.json"]
 }
 ```
 
@@ -137,7 +137,7 @@ Projects using Spec-Driven Development can adopt the bundled grammar (typed IDs
 
 ```js
 // comment-lint.config.mjs
-import sdd from "@cyberash/dev-tooling/presets/sdd.mjs";
+import sdd from "@cyberash-dev/dev-tooling/presets/sdd.mjs";
 export default { ...sdd, specDirs: ["spec"] };
 ```
 
