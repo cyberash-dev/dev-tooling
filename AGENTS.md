@@ -63,10 +63,9 @@ npx eslint . --fix --rule '{"curly":"error"}'   # braces only
 ```
 
 `@typescript-eslint/no-explicit-any` is never auto-fixed (narrow the type). Unsafe
-`as` casts are banned with no auto-fix: `@typescript-eslint/no-unsafe-type-assertion`
-(narrowing casts) and `no-restricted-syntax` (casts through `unknown` —
-`x as unknown`, `x as unknown as T`). Narrow the type or fix the source type;
-`as const` and safe widening stay allowed.
+`as` casts are banned with no auto-fix by `@typescript-eslint/no-unsafe-type-assertion`
+(narrowing casts, including the `x as unknown as T` escape hatch). Narrow the type or
+fix the source type; `as const` and safe widening stay allowed.
 `@typescript-eslint/no-non-null-assertion` cannot auto-fix every `x!` (e.g. as a
 call argument) — fix those by hand. `max-params` / `max-lines-per-function` /
 `max-properties-per-class/max-methods` / `max-properties-per-class/max-properties`
