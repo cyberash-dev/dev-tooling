@@ -1,6 +1,6 @@
 {
   "name": "@cyberash-dev/dev-tooling",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shareable Biome base config and a deterministic comment linter for TypeScript/JavaScript projects.",
   "type": "module",
   "license": "MIT",
