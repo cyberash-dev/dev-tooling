@@ -27,14 +27,21 @@ function parseArgs(argv) {
 	};
 	for (let i = 0; i < argv.length; i++) {
 		const a = argv[i];
-		if (a === "--fix") opts.fix = true;
-		else if (a === "--spec-dir") opts.specDirs.push(argv[++i]);
-		else if (a === "--max-lines") opts.maxLines = Number(argv[++i]);
-		else if (a === "--anchored-max-lines")
+		if (a === "--fix") {
+			opts.fix = true;
+		} else if (a === "--spec-dir") {
+			opts.specDirs.push(argv[++i]);
+		} else if (a === "--max-lines") {
+			opts.maxLines = Number(argv[++i]);
+		} else if (a === "--anchored-max-lines") {
 			opts.anchoredMaxLines = Number(argv[++i]);
-		else opts.paths.push(a);
+		} else {
+			opts.paths.push(a);
+		}
 	}
-	if (opts.paths.length === 0) opts.paths.push(".");
+	if (opts.paths.length === 0) {
+		opts.paths.push(".");
+	}
 	return opts;
 }
 
@@ -49,13 +56,19 @@ function collect(paths) {
 		}
 		if (st.isDirectory()) {
 			const base = p.split("/").pop();
-			if (base === "node_modules" || base === ".git") return;
-			for (const e of readdirSync(p)) visit(join(p, e));
+			if (base === "node_modules" || base === ".git") {
+				return;
+			}
+			for (const e of readdirSync(p)) {
+				visit(join(p, e));
+			}
 		} else if (SOURCE_EXT.has(extname(p))) {
 			files.push(p);
 		}
 	};
-	for (const p of paths) visit(p);
+	for (const p of paths) {
+		visit(p);
+	}
 	return files;
 }
 
@@ -90,8 +103,11 @@ for (const file of files) {
 		}
 	}
 	for (const d of lintText(text, file, ctx)) {
-		if (d.severity === "error") errors++;
-		else warnings++;
+		if (d.severity === "error") {
+			errors++;
+		} else {
+			warnings++;
+		}
 		const tag = d.severity === "error" ? "ERROR" : "warn ";
 		process.stdout.write(`${tag} ${file}:${d.line} [${d.rule}] ${d.message}\n`);
 	}

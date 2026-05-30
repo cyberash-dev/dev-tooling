@@ -31,9 +31,13 @@ function headVersion(path) {
 function protectedTokens(text, grammar) {
 	const set = new Set();
 	for (const re of grammar.protectedStrip) {
-		for (const m of text.matchAll(re)) set.add(m[0]);
+		for (const m of text.matchAll(re)) {
+			set.add(m[0]);
+		}
 	}
-	for (const id of fullSpecIds(text, grammar.anchorRe)) set.add(id);
+	for (const id of fullSpecIds(text, grammar.anchorRe)) {
+		set.add(id);
+	}
 	return set;
 }
 
@@ -46,7 +50,9 @@ const paths = process.argv
 let failures = 0;
 for (const path of paths) {
 	const head = headVersion(path);
-	if (head === null) continue;
+	if (head === null) {
+		continue;
+	}
 	const work = readFileSync(path, "utf8");
 
 	if (codeSkeleton(head, path) !== codeSkeleton(work, path)) {
