@@ -6,7 +6,7 @@ description: >-
   noise, trim comment prose, enforce the comment policy, or says "почисти
   комментарии", "вырежи лишние комментарии", "убери прозу из комментариев",
   "clean comments". This is the SEMANTIC pass that runs AFTER the deterministic
-  linters (Biome + lint-comments); it resolves what the comment linter flagged
+  linters (ESLint + lint-comments); it resolves what the comment linter flagged
   but could not safely auto-fix, and judges the non-deterministic calls (is a
   why necessary, does prose duplicate a record with a real home elsewhere).
 ---
@@ -16,7 +16,7 @@ description: >-
 `lint-comments --fix` already did the mechanical rewrites (pure snippet, dead-anchor
 delete, decorative, `//` → `/* */` and merge). What remains is judgment: R1 over-cap,
 R2 narrative, a partial snippet mixed with prose, and the deeper question of whether a
-comment should exist at all. Run this skill after Biome and `lint-comments --fix`,
+comment should exist at all. Run this skill after ESLint and `lint-comments --fix`,
 never before.
 
 ## Principle
@@ -30,7 +30,7 @@ convey is not a comment.
 ## Procedure
 
 1. **Collect the flags.** Run `npm run lint` (or `node_modules/.bin/lint-comments
-   <dirs>`) and read every comment-lint error. Work file by file.
+<dirs>`) and read every comment-lint error. Work file by file.
 2. **For each flagged comment, decide:**
    - **R1 (too long).** Does the prose carry a real why, or is it narration? If the
      rationale belongs to a record with a home elsewhere (a spec ID, an issue,

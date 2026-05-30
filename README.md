@@ -2,7 +2,8 @@
 
 Shareable dev tooling for any TypeScript/JavaScript project:
 
-- **`biome.base.json`** — a strict Biome base config (no formatter, lint-only).
+- **`eslint.base.mjs`** — a strict ESLint flat-config base (type-aware on `.ts`).
+- **`prettier.base.json`** — a minimal Prettier config (tabs); Prettier owns formatting.
 - **`lint-comments`** — a deterministic comment linter that keeps comments short
   and free of change-narrative, code snippets, and decorative banners.
 - **`verify-comment-clean`** — a safety net asserting an edit touched only
@@ -16,38 +17,46 @@ agent-facing adoption runbook.
 ## Install
 
 ```sh
-npm install -D @cyberash-dev/dev-tooling @biomejs/biome
+npm install -D @cyberash-dev/dev-tooling eslint prettier
 ```
 
-`@biomejs/biome` is a peer dependency: install it directly so its bin and
-`lint-comments` both land in `node_modules/.bin`.
+`eslint` and `prettier` are peer dependencies: install them directly so their bins
+and `lint-comments` all land in `node_modules/.bin`. ESLint ≥ 9 (flat config) and
+Prettier ≥ 3 are required.
 
 ## Wire it up
 
+```js
+// eslint.config.mjs
+import base from "@cyberash-dev/dev-tooling/eslint.base.mjs";
+
+export default [...base];
+```
+
 ```jsonc
-// biome.json
-{
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
-  "extends": ["@cyberash-dev/dev-tooling/biome.base.json"]
-}
+// package.json — point Prettier at the shipped config
+"prettier": "@cyberash-dev/dev-tooling/prettier.base.json"
 ```
 
 ```jsonc
 // package.json scripts
-"lint":     "biome lint . && lint-comments src tests",
-"lint:fix": "biome lint --write . && lint-comments --fix src tests"
+"lint":     "eslint . && lint-comments src tests",
+"lint:fix": "eslint . --fix && lint-comments --fix src tests",
+"format":   "prettier --write .",
+"format:check": "prettier --check ."
 ```
 
-The base Biome config enables (all `error`): `useBlockStatements` (braces on every
-`if`/`for`/`while`/…), `noNonNullAssertion` (no `obj.x!.y`), `noExplicitAny`,
-`noExcessiveLinesPerFunction` (function body over 80 non-blank lines),
-`useMaxParams` (more than 7 parameters), plus the `recommended` set. The formatter
-is intentionally **off** — this config never reflows your code.
+The base ESLint config enables (all `error`): `curly` (braces on every
+`if`/`for`/`while`/…), `@typescript-eslint/no-non-null-assertion` (no `obj.x!.y`),
+`@typescript-eslint/no-explicit-any`, `max-lines-per-function` (function body over 80
+non-blank lines), `max-params` (more than 7 parameters), plus `@eslint/js` recommended
+and `typescript-eslint`'s **type-checked** recommended set. Prettier owns formatting;
+`eslint-config-prettier` switches off the ESLint stylistic rules that would conflict.
 
-The two structural caps are hard limits only: Biome configures one threshold per
-rule, so softer advisory tiers (50 lines / 3 params) and per-class/interface method
-and property counts are not enforced here. `useMaxParams` requires Biome ≥ 2.2.0
-(`noExcessiveLinesPerFunction` ≥ 2.0.0); the package peer-depends on `>=2.2.0`.
+Linting is **type-aware** on `.ts`/`.tsx` (`projectService` — needs a `tsconfig.json`
+in the consumer repo); the type-checked rules are switched off for plain `.js`/`.mjs`.
+The two structural caps are hard limits only: softer advisory tiers (50 lines / 3
+params) and per-class/interface method and property counts are not enforced here.
 
 ## Comment policy (what the linter enforces)
 
@@ -55,14 +64,14 @@ The linter covers the **deterministic** part of a comment policy; the semantic
 remainder (is a WHY necessary, does prose duplicate a spec) is left to the
 [`clean-comments` skill](./skills/clean-comments/SKILL.md).
 
-| ID | severity | what | `--fix` |
-|----|----------|------|---------|
-| R1 | error | comment block with too many **prose** lines (marker/anchor-only lines do not count): any block > `--max-lines` (default 4); blocks carrying a protected marker > `--anchored-max-lines` (default 3) | no |
-| R2 | error | change-narrative / history prose (`renamed from`, `as before`, version tags, bare dates, …) in an **unprotected** comment | no |
-| R3 | error | code snippet inside a comment (usage example) | yes, when the whole block is a snippet |
-| R4 | error | a configured anchor (`anchorPattern`) that resolves to no `id:` in any `specDirs` | yes — **deletes the whole comment** carrying the dead anchor |
-| R5 | error | decorative / section-marker line (`// ====`, `// #region`) | yes |
-| R7 | error | line comment (`//`); comments must use the block `/* */` form | yes — `//` → `/* */`; a run of full-line `//` merges into one block |
+| ID  | severity | what                                                                                                                                                                                                | `--fix`                                                             |
+| --- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| R1  | error    | comment block with too many **prose** lines (marker/anchor-only lines do not count): any block > `--max-lines` (default 4); blocks carrying a protected marker > `--anchored-max-lines` (default 3) | no                                                                  |
+| R2  | error    | change-narrative / history prose (`renamed from`, `as before`, version tags, bare dates, …) in an **unprotected** comment                                                                           | no                                                                  |
+| R3  | error    | code snippet inside a comment (usage example)                                                                                                                                                       | yes, when the whole block is a snippet                              |
+| R4  | error    | a configured anchor (`anchorPattern`) that resolves to no `id:` in any `specDirs`                                                                                                                   | yes — **deletes the whole comment** carrying the dead anchor        |
+| R5  | error    | decorative / section-marker line (`// ====`, `// #region`)                                                                                                                                          | yes                                                                 |
+| R7  | error    | line comment (`//`); comments must use the block `/* */` form                                                                                                                                       | yes — `//` → `/* */`; a run of full-line `//` merges into one block |
 
 `--fix` for R4 and R7 is **destructive by design**: it removes dead-anchor
 comments and rewrites every `//` comment. The bare lint (no `--fix`) only reports,
@@ -86,7 +95,7 @@ Before:
 ```ts
 // loads the manifest
 // then validates it
-const manifest = load();         // never null here
+const manifest = load(); // never null here
 // app:INV-404 stale, was renamed
 const ordered = sort(manifest);
 // app:INV-007 ordering invariant
@@ -101,7 +110,7 @@ After:
  * loads the manifest
  * then validates it
  */
-const manifest = load();         /* never null here */
+const manifest = load(); /* never null here */
 const ordered = sort(manifest);
 /* app:INV-007 ordering invariant */
 const checked = verify(ordered);
@@ -120,15 +129,15 @@ Discovery order (first match wins, then CLI flags override):
 ```js
 // comment-lint.config.mjs
 export default {
-  // markers that make a comment "protected": exempt from R2/R3, raise the R1 cap,
-  // and never auto-removed. Stripped (in this order) when counting prose words.
-  protectedPatterns: [/\bTICKET-\d+\b/, /@see\s+\S+/],
-  // a resolvable anchor whose every occurrence must exist as `id:` in specDirs (R4).
-  // Leave null to disable R4 entirely.
-  anchorPattern: null,
-  specDirs: [],
-  maxLines: 4,
-  anchoredMaxLines: 3,
+	// markers that make a comment "protected": exempt from R2/R3, raise the R1 cap,
+	// and never auto-removed. Stripped (in this order) when counting prose words.
+	protectedPatterns: [/\bTICKET-\d+\b/, /@see\s+\S+/],
+	// a resolvable anchor whose every occurrence must exist as `id:` in specDirs (R4).
+	// Leave null to disable R4 entirely.
+	anchorPattern: null,
+	specDirs: [],
+	maxLines: 4,
+	anchoredMaxLines: 3,
 };
 ```
 

@@ -1,25 +1,38 @@
 # AGENTS.md — adopting @cyberash-dev/dev-tooling
 
 Instructions for any AI coding agent (Claude Code, Codex, Cursor, Aider, …)
-adopting this tooling in a target repository. This package ships a strict Biome
-base config and a deterministic comment linter. It is generic by default; spec
-anchors / ticket refs are opt-in.
+adopting this tooling in a target repository. This package ships a strict ESLint
+flat-config base, a minimal Prettier config, and a deterministic comment linter. It
+is generic by default; spec anchors / ticket refs are opt-in.
 
 ## Adopt in a repo (one pass)
 
-1. **Install** (peer Biome alongside, so both bins land in `node_modules/.bin`):
+1. **Install** (peer ESLint + Prettier alongside, so their bins and `lint-comments`
+   all land in `node_modules/.bin`):
    ```sh
-   npm install -D @cyberash-dev/dev-tooling @biomejs/biome
+   npm install -D @cyberash-dev/dev-tooling eslint prettier
    ```
-2. **`biome.json`** — extend the base:
-   ```jsonc
-   { "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
-     "extends": ["@cyberash-dev/dev-tooling/biome.base.json"] }
+2. **`eslint.config.mjs`** — spread the base (ESLint ≥ 9 flat config):
+
+   ```js
+   import base from "@cyberash-dev/dev-tooling/eslint.base.mjs";
+
+   export default [...base];
    ```
-3. **Lint scripts** in `package.json` (point the linter at the source dirs):
+
+   Type-aware rules run on `.ts`/`.tsx` via `projectService`, so the repo needs a
+   `tsconfig.json`. Point Prettier at the shipped config in `package.json`:
+
    ```jsonc
-   "lint":     "biome lint . && lint-comments src tests",
-   "lint:fix": "biome lint --write . && lint-comments --fix src tests"
+   "prettier": "@cyberash-dev/dev-tooling/prettier.base.json"
+   ```
+
+3. **Scripts** in `package.json` (point the linter at the source dirs):
+   ```jsonc
+   "lint":     "eslint . && lint-comments src tests",
+   "lint:fix": "eslint . --fix && lint-comments --fix src tests",
+   "format":   "prettier --write .",
+   "format:check": "prettier --check ."
    ```
 4. **Anchors (optional).** If the repo uses spec IDs, ticket refs, or `@covers`
    markers, add a `comment-lint.config.mjs` (see README → Configuration). For
@@ -30,27 +43,34 @@ anchors / ticket refs are opt-in.
    ```
    Skip this step entirely for a plain repo.
 5. Commit the wiring on its own (`package.json`, `package-lock.json`,
-   `biome.json`, the config if any).
+   `eslint.config.mjs`, the config if any).
 
 ## Bring a repo green
 
-Apply mechanical Biome fixes **one rule at a time**, each its own commit, so code
-edits never mix with each other or with comment work:
+First formatting, as its own commit — Prettier owns layout, so apply it before any
+lint fix so the two never mix in a diff:
 
 ```sh
-npx biome lint .                                                  # see violations
-npx biome lint . --write --unsafe --only=style/useBlockStatements # braces
-npx biome lint . --write --unsafe --only=style/noNonNullAssertion # x! -> x?. (some manual)
+npx prettier --write .
 ```
 
-`noExplicitAny` is never auto-fixed (narrow the type). `noNonNullAssertion` cannot
-auto-fix `x!` used as a call argument or inside `in` — fix those by hand. Run the
-project's typecheck and tests after, commit separately.
+Then apply mechanical ESLint fixes. `eslint . --fix` lands every auto-fixable rule
+at once; to keep commits one-concern, fix and commit per rule with `--rule`:
+
+```sh
+npx eslint .                              # see violations
+npx eslint . --fix --rule '{"curly":"error"}'   # braces only
+```
+
+`@typescript-eslint/no-explicit-any` is never auto-fixed (narrow the type).
+`@typescript-eslint/no-non-null-assertion` cannot auto-fix every `x!` (e.g. as a
+call argument) — fix those by hand. `max-params` / `max-lines-per-function` have no
+auto-fix; refactor. Run the project's typecheck and tests after, commit separately.
 
 Then the comment linter:
 
 ```sh
-npm run lint:fix     # biome safe fixes + comment-lint --fix
+npm run lint:fix     # eslint --fix + comment-lint --fix
 npm run lint         # report remaining comment-lint errors (R1/R2, partial R3)
 ```
 
