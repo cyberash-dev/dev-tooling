@@ -39,9 +39,15 @@ npm install -D @cyberash-dev/dev-tooling @biomejs/biome
 ```
 
 The base Biome config enables (all `error`): `useBlockStatements` (braces on every
-`if`/`for`/`while`/…), `noNonNullAssertion` (no `obj.x!.y`), `noExplicitAny`, plus
-the `recommended` set. The formatter is intentionally **off** — this config never
-reflows your code.
+`if`/`for`/`while`/…), `noNonNullAssertion` (no `obj.x!.y`), `noExplicitAny`,
+`noExcessiveLinesPerFunction` (function body over 80 non-blank lines),
+`useMaxParams` (more than 7 parameters), plus the `recommended` set. The formatter
+is intentionally **off** — this config never reflows your code.
+
+The two structural caps are hard limits only: Biome configures one threshold per
+rule, so softer advisory tiers (50 lines / 3 params) and per-class/interface method
+and property counts are not enforced here. `useMaxParams` requires Biome ≥ 2.2.0
+(`noExcessiveLinesPerFunction` ≥ 2.0.0); the package peer-depends on `>=2.2.0`.
 
 ## Comment policy (what the linter enforces)
 
