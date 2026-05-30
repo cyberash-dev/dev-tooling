@@ -49,14 +49,19 @@ export default [...base];
 The base ESLint config enables (all `error`): `curly` (braces on every
 `if`/`for`/`while`/…), `@typescript-eslint/no-non-null-assertion` (no `obj.x!.y`),
 `@typescript-eslint/no-explicit-any`, `max-lines-per-function` (function body over 80
-non-blank lines), `max-params` (more than 7 parameters), plus `@eslint/js` recommended
-and `typescript-eslint`'s **type-checked** recommended set. Prettier owns formatting;
-`eslint-config-prettier` switches off the ESLint stylistic rules that would conflict.
+non-blank lines), `max-params` (more than 7 parameters),
+`max-properties-per-class/max-methods` and `max-properties-per-class/max-properties`
+(over 10 public instance methods / properties per class or interface, via
+[`eslint-plugin-max-properties-per-class`](https://github.com/cyberash-dev/eslint-plugin-max-properties-per-class)),
+plus `@eslint/js` recommended and `typescript-eslint`'s **type-checked** recommended
+set. Prettier owns formatting; `eslint-config-prettier` switches off the ESLint
+stylistic rules that would conflict.
 
 Linting is **type-aware** on `.ts`/`.tsx` (`projectService` — needs a `tsconfig.json`
 in the consumer repo); the type-checked rules are switched off for plain `.js`/`.mjs`.
-The two structural caps are hard limits only: softer advisory tiers (50 lines / 3
-params) and per-class/interface method and property counts are not enforced here.
+The structural caps are hard error limits only — function length (80 lines), params
+(7), and per-class/interface counts (10 public instance methods, 10 public instance
+properties). The softer advisory tiers (50 lines / 3 params) are not enforced here.
 
 ## Comment policy (what the linter enforces)
 
