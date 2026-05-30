@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
+import maxPropsPerClass from "eslint-plugin-max-properties-per-class";
 
 const TS_FILES = ["**/*.{ts,tsx,mts,cts}"];
 const JS_FILES = ["**/*.{js,mjs,cjs}"];
@@ -20,6 +21,7 @@ export default [
 	{ files: JS_FILES, ...tseslint.configs.disableTypeChecked },
 	eslintConfigPrettier,
 	{
+		plugins: { "max-properties-per-class": maxPropsPerClass },
 		rules: {
 			curly: ["error", "all"],
 			"max-params": ["error", 7],
@@ -27,6 +29,8 @@ export default [
 				"error",
 				{ max: 80, skipBlankLines: true, skipComments: false },
 			],
+			"max-properties-per-class/max-methods": ["error", { max: 10 }],
+			"max-properties-per-class/max-properties": ["error", { max: 10 }],
 		},
 	},
 	{
