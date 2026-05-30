@@ -38,6 +38,19 @@ export default [
 		rules: {
 			"@typescript-eslint/no-explicit-any": "error",
 			"@typescript-eslint/no-non-null-assertion": "error",
+			"no-restricted-syntax": [
+				"error",
+				{
+					selector: 'TSAsExpression[typeAnnotation.type="TSUnknownKeyword"]',
+					message:
+						"Do not cast through `unknown` — it defeats type checking. Narrow the type or fix the source type.",
+				},
+				{
+					selector: 'TSTypeAssertion[typeAnnotation.type="TSUnknownKeyword"]',
+					message:
+						"Do not cast through `unknown` — it defeats type checking. Narrow the type or fix the source type.",
+				},
+			],
 		},
 	},
 ];

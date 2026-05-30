@@ -48,7 +48,10 @@ export default [...base];
 
 The base ESLint config enables (all `error`): `curly` (braces on every
 `if`/`for`/`while`/…), `@typescript-eslint/no-non-null-assertion` (no `obj.x!.y`),
-`@typescript-eslint/no-explicit-any`, `max-lines-per-function` (function body over 80
+`@typescript-eslint/no-explicit-any` (no `any` annotations or `as any`),
+`no-restricted-syntax` banning casts through `unknown` (`x as unknown`,
+`x as unknown as T` — the escape hatch around type checking),
+`max-lines-per-function` (function body over 80
 non-blank lines), `max-params` (more than 7 parameters),
 `max-properties-per-class/max-methods` and `max-properties-per-class/max-properties`
 (over 10 public instance methods / properties per class or interface, via
