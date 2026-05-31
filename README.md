@@ -59,6 +59,11 @@ non-blank lines), `max-params` (more than 7 parameters),
 `max-properties-per-class/max-methods` and `max-properties-per-class/max-properties`
 (over 10 public instance methods / properties per class or interface, via
 [`eslint-plugin-max-properties-per-class`](https://github.com/cyberash-dev/eslint-plugin-max-properties-per-class)),
+`no-console` (`console.log`/`info`/`debug`; `console.warn`/`error` stay allowed),
+`id-denylist` (placeholder identifier names: `tmp`, `foo`, `bar`, `baz`, `info`, `res`,
+`val`), `@typescript-eslint/naming-convention` (`PascalCase` for classes / interfaces /
+type aliases / enums / type parameters, and an `is`/`has`/`can`/`should` prefix on
+boolean variables; destructured bindings are exempt),
 the five `comment-policy/*` rules (`max-comment-lines`, `no-comment-narrative`,
 `no-comment-code-snippet`, `no-decorative-comment`, `no-line-comment`, via
 [`eslint-plugin-comment-policy`](https://www.npmjs.com/package/eslint-plugin-comment-policy)

@@ -5,6 +5,7 @@ import { RuleTester } from "eslint";
 
 import rule from "../eslint-rules/no-dead-spec-anchor.mjs";
 import { getSpecIndex } from "../eslint-rules/spec-index.mjs";
+import { run as runBaseConfigTests } from "./base-config.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const specDir = join(here, "fixtures", "spec");
@@ -45,3 +46,5 @@ if (!getSpecIndex([specDir]).has("app:INV-007")) {
 }
 
 process.stdout.write("no-dead-spec-anchor: all RuleTester cases passed.\n");
+
+await runBaseConfigTests();

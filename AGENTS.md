@@ -74,8 +74,11 @@ fix the source type; `as const` and safe widening stay allowed.
 `@typescript-eslint/no-non-null-assertion` cannot auto-fix every `x!` (e.g. as a
 call argument) — fix those by hand. `max-params` / `max-lines-per-function` /
 `max-properties-per-class/max-methods` / `max-properties-per-class/max-properties`
-have no auto-fix; refactor. Run the project's typecheck and tests after, commit
-separately.
+have no auto-fix; refactor. `no-console` (rewrite to a logger or drop the call),
+`id-denylist` (rename the placeholder identifier), and
+`@typescript-eslint/naming-convention` (rename the type/class or add the
+`is`/`has`/`can`/`should` boolean prefix) also have no auto-fix — rename by hand. Run the
+project's typecheck and tests after, commit separately.
 
 The comment policy rides along in that same ESLint pass. `eslint . --fix` performs every
 mechanical comment rewrite: rewrites `//` to `/* */` and merges runs of full-line `//`

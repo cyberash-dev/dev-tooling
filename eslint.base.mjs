@@ -58,6 +58,17 @@ export default [
 		plugins: { "max-properties-per-class": maxPropsPerClass },
 		rules: {
 			curly: ["error", "all"],
+			"no-console": ["error", { allow: ["warn", "error"] }],
+			"id-denylist": [
+				"error",
+				"tmp",
+				"foo",
+				"bar",
+				"baz",
+				"info",
+				"res",
+				"val",
+			],
 			"max-params": ["error", 7],
 			"max-lines-per-function": [
 				"error",
@@ -73,6 +84,26 @@ export default [
 			"@typescript-eslint/no-explicit-any": "error",
 			"@typescript-eslint/no-non-null-assertion": "error",
 			"@typescript-eslint/no-unsafe-type-assertion": "error",
+			"@typescript-eslint/naming-convention": [
+				"error",
+				{
+					selector: [
+						"class",
+						"interface",
+						"typeAlias",
+						"enum",
+						"typeParameter",
+					],
+					format: ["PascalCase"],
+				},
+				{ selector: "variable", modifiers: ["destructured"], format: null },
+				{
+					selector: "variable",
+					types: ["boolean"],
+					format: ["PascalCase"],
+					prefix: ["is", "has", "can", "should"],
+				},
+			],
 		},
 	},
 ];
