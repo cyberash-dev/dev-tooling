@@ -3,6 +3,9 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
 import maxPropsPerClass from "eslint-plugin-max-properties-per-class";
+import commentPolicy from "eslint-plugin-comment-policy";
+import specAnchor from "./eslint-rules/index.mjs";
+import { SDD_PROTECTED } from "./eslint-rules/sdd-grammar.mjs";
 
 const TS_FILES = ["**/*.{ts,tsx,mts,cts}"];
 const JS_FILES = ["**/*.{js,mjs,cjs}"];
@@ -20,6 +23,37 @@ export default [
 	},
 	{ files: JS_FILES, ...tseslint.configs.disableTypeChecked },
 	eslintConfigPrettier,
+	{
+		plugins: { "comment-policy": commentPolicy },
+		rules: {
+			"comment-policy/max-comment-lines": [
+				"error",
+				{ max: 4, anchoredMax: 3, protectedPatterns: SDD_PROTECTED },
+			],
+			"comment-policy/no-comment-narrative": [
+				"error",
+				{ protectedPatterns: SDD_PROTECTED },
+			],
+			"comment-policy/no-comment-code-snippet": [
+				"error",
+				{ protectedPatterns: SDD_PROTECTED },
+			],
+			"comment-policy/no-decorative-comment": [
+				"error",
+				{ protectedPatterns: SDD_PROTECTED },
+			],
+			"comment-policy/no-line-comment": [
+				"error",
+				{ protectedPatterns: SDD_PROTECTED },
+			],
+		},
+	},
+	{
+		plugins: { "spec-anchor": specAnchor },
+		rules: {
+			"spec-anchor/no-dead-spec-anchor": "error",
+		},
+	},
 	{
 		plugins: { "max-properties-per-class": maxPropsPerClass },
 		rules: {

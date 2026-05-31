@@ -2,13 +2,17 @@
 
 Instructions for any AI coding agent (Claude Code, Codex, Cursor, Aider, …)
 adopting this tooling in a target repository. This package ships a strict ESLint
-flat-config base, a minimal Prettier config, and a deterministic comment linter. It
-is generic by default; spec anchors / ticket refs are opt-in.
+flat-config base and a minimal Prettier config. The whole comment policy runs in ESLint:
+five per-file `comment-policy/*` rules (from
+[`eslint-plugin-comment-policy`](https://www.npmjs.com/package/eslint-plugin-comment-policy))
+plus a local cross-file `spec-anchor/no-dead-spec-anchor` rule. It is generic by default;
+spec anchors / ticket refs are opt-in (the base ships the SDD protected-pattern set, a
+no-op for repos that carry no anchors).
 
 ## Adopt in a repo (one pass)
 
-1. **Install** (peer ESLint + Prettier alongside, so their bins and `lint-comments`
-   all land in `node_modules/.bin`):
+1. **Install** (peer ESLint + Prettier alongside, so their bins land in
+   `node_modules/.bin`):
    ```sh
    npm install -D @cyberash-dev/dev-tooling eslint prettier
    ```
@@ -27,23 +31,24 @@ is generic by default; spec anchors / ticket refs are opt-in.
    "prettier": "@cyberash-dev/dev-tooling/prettier.base.json"
    ```
 
-3. **Scripts** in `package.json` (point the linter at the source dirs):
+3. **Scripts** in `package.json` (ESLint enforces the whole comment policy):
    ```jsonc
-   "lint":     "eslint . && lint-comments src tests",
-   "lint:fix": "eslint . --fix && lint-comments --fix src tests",
+   "lint":     "eslint .",
+   "lint:fix": "eslint . --fix",
    "format":   "prettier --write .",
    "format:check": "prettier --check ."
    ```
-4. **Anchors (optional).** If the repo uses spec IDs, ticket refs, or `@covers`
-   markers, add a `comment-lint.config.mjs` (see README → Configuration). For
-   Spec-Driven Development, one line:
+4. **Anchors (optional).** If the repo uses spec IDs (`partition:TYPE-NNN`), turn on the
+   dead-anchor rule by pointing it at the spec tree in `eslint.config.mjs`:
    ```js
-   import sdd from "@cyberash-dev/dev-tooling/presets/sdd.mjs";
-   export default { ...sdd, specDirs: ["spec"] };
+   ...base,
+   { rules: { "spec-anchor/no-dead-spec-anchor": ["error", { specDirs: ["spec"] }] } },
    ```
-   Skip this step entirely for a plain repo.
+   Pass `anchorPattern` (a regex source string) too if your anchors are not the SDD
+   typed-id grammar. Skip this step entirely for a plain repo — the rule is inert without
+   `specDirs`.
 5. Commit the wiring on its own (`package.json`, `package-lock.json`,
-   `eslint.config.mjs`, the config if any).
+   `eslint.config.mjs`).
 
 ## Bring a repo green
 
@@ -72,42 +77,28 @@ call argument) — fix those by hand. `max-params` / `max-lines-per-function` /
 have no auto-fix; refactor. Run the project's typecheck and tests after, commit
 separately.
 
-Then the comment linter:
+The comment policy rides along in that same ESLint pass. `eslint . --fix` performs every
+mechanical comment rewrite: rewrites `//` to `/* */` and merges runs of full-line `//`
+(`no-line-comment`), drops decorative banner lines (`no-decorative-comment`), removes pure
+code-snippet blocks (`no-comment-code-snippet`), and deletes comments carrying a dead spec
+anchor (`spec-anchor/no-dead-spec-anchor`, once `specDirs` is set). The remaining errors
+(`max-comment-lines`, `no-comment-narrative`, a snippet mixed with prose) have no auto-fix
+— they are the semantic pass below.
 
-```sh
-npm run lint:fix     # eslint --fix + comment-lint --fix
-npm run lint         # report remaining comment-lint errors (R1/R2, partial R3)
-```
-
-`comment-lint --fix` is **destructive**: it deletes dead-anchor comments (R4),
-rewrites every `//` to `/* */` and merges runs of full-line `//` (R7), drops
-decorative lines (R5), and removes pure code-snippet blocks (R3). Run the bare
-`npm run lint` first and eyeball the R4 hits — a dead anchor that is really a typo
-or rename should be repaired before `--fix` deletes the comment. A dead anchor
-takes its **whole** block with it (consecutive `//` are one block), so a live
-anchor or prose sharing that block goes too — keep independent notes apart. See
+`eslint --fix` deleting a dead-anchor comment is **destructive**. Run the bare `eslint .`
+first and eyeball the dead-anchor hits — an anchor that is really a typo or rename should
+be repaired before `--fix` deletes the comment. See
 [README → What `--fix` rewrites](./README.md#what---fix-rewrites) for a before/after.
-
-`lint-comments` is on `$PATH` only inside `npm run` (npm adds `node_modules/.bin`).
-Otherwise call `node_modules/.bin/lint-comments`.
 
 ## The semantic half is not the linter's job
 
-`--fix` handles the mechanical rewrites (R3 snippet, R4 dead-anchor delete, R5
-decorative, R7 form/merge). What it leaves — R1 over-cap, R2 narrative, a partial
-R3 snippet mixed with prose — is judgment: compressing prose to a short why,
-deciding whether a WHY is even needed, moving rationale out of the comment. That is the
-[`clean-comments` skill](./skills/clean-comments/SKILL.md). After a semantic pass,
-prove you touched only comments:
-
-```sh
-node_modules/.bin/verify-comment-clean $(git diff --name-only -- src tests)
-```
-
-Exit 0 = non-comment code byte-identical to `HEAD` and all protected tokens
-survived. This guards the hand-editing pass; `--fix`'s dead-anchor deletion is the
-one sanctioned token drop, so it belongs in the earlier `--fix` commit, not here.
-Commit the comment cleanup on its own.
+`eslint --fix` handles the mechanical rewrites (snippet, decorative, `//`→`/* */`
+form/merge, dead-anchor delete). What it leaves — `max-comment-lines` over-cap,
+`no-comment-narrative`, a snippet mixed with prose — is judgment: compressing prose to a
+short why, deciding whether a WHY is even needed, moving rationale out of the comment.
+That is the [`clean-comments` skill](./skills/clean-comments/SKILL.md). After a semantic
+pass, review `git diff` to confirm you changed only comments (and dropped no anchor), then
+commit the comment cleanup on its own.
 
 ## Comment policy (summary)
 

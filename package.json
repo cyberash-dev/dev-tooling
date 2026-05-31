@@ -1,7 +1,7 @@
 {
 	"name": "@cyberash-dev/dev-tooling",
-	"version": "3.0.0",
-	"description": "Shareable ESLint + Prettier config and a deterministic comment linter for TypeScript/JavaScript projects.",
+	"version": "4.0.0",
+	"description": "Shareable ESLint + Prettier config (incl. a comment policy) for TypeScript/JavaScript projects.",
 	"type": "module",
 	"license": "MIT",
 	"repository": {
@@ -13,28 +13,22 @@
 		"eslint-config",
 		"prettier",
 		"prettier-config",
-		"comment-lint",
 		"comments",
+		"comment-policy",
 		"linter",
 		"code-style",
 		"typescript"
 	],
-	"bin": {
-		"lint-comments": "bin/lint-comments.mjs",
-		"verify-comment-clean": "bin/verify-comment-clean.mjs"
-	},
 	"files": [
 		"eslint.base.mjs",
 		"prettier.base.json",
-		"bin",
-		"lib",
-		"presets",
+		"eslint-rules",
 		"skills",
 		"AGENTS.md"
 	],
 	"scripts": {
-		"lint": "eslint . && node bin/lint-comments.mjs bin lib presets tests",
-		"lint:fix": "eslint . --fix && node bin/lint-comments.mjs --fix bin lib presets tests",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"test": "node tests/run-all.mjs",
@@ -43,6 +37,7 @@
 	"dependencies": {
 		"@eslint/js": "^9.16.0",
 		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-comment-policy": "^0.2.0",
 		"eslint-plugin-max-properties-per-class": "^1.0.1",
 		"globals": "^15.13.0",
 		"typescript": "^5.6.3",
