@@ -35,13 +35,13 @@
 		"prepublishOnly": "npm test"
 	},
 	"dependencies": {
-		"@eslint/js": "^9.16.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-comment-policy": "^0.2.0",
-		"eslint-plugin-max-properties-per-class": "^1.0.1",
-		"globals": "^15.13.0",
-		"typescript": "^5.6.3",
-		"typescript-eslint": "^8.18.0"
+		"@eslint/js": "9.39.4",
+		"eslint-config-prettier": "9.1.2",
+		"eslint-plugin-comment-policy": "0.2.0",
+		"eslint-plugin-max-properties-per-class": "1.0.1",
+		"globals": "15.15.0",
+		"typescript": "5.9.3",
+		"typescript-eslint": "8.60.0"
 	},
 	"peerDependencies": {
 		"eslint": ">=9",
