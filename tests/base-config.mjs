@@ -78,5 +78,16 @@ export async function run() {
 		);
 	}
 
+	const unicodeBanner =
+		"/* ── Tracker-channel inbound-event handlers (gatehouse:tracker-channel) ────── */\nexport const c = 1;\n";
+	const [bannerResult] = await eslint.lintText(unicodeBanner, {
+		filePath: "banner.mjs",
+	});
+	if (!ruleIdsOf(bannerResult).has("comment-policy/no-decorative-comment")) {
+		throw new Error(
+			`expected no-decorative-comment to fire on a Unicode box-drawing banner, got: ${[...ruleIdsOf(bannerResult)].join(", ")}`,
+		);
+	}
+
 	process.stdout.write("base-config: all integration cases passed.\n");
 }
