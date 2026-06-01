@@ -54,7 +54,8 @@ The base ESLint config enables (all `error`): `curly` (braces on every
 `@typescript-eslint/no-explicit-any` (no `any` annotations or `as any`),
 `@typescript-eslint/no-unsafe-type-assertion` (no narrowing/unsafe `as` casts,
 including the `x as unknown as T` escape hatch; `as const` and safe widening stay
-allowed), `max-lines-per-function` (function body over 80
+allowed), `max-lines` (whole file over 350 lines, excluding blank and
+comment lines), `max-lines-per-function` (function body over 80
 non-blank lines), `max-params` (more than 7 parameters),
 `max-properties-per-class/max-methods` and `max-properties-per-class/max-properties`
 (over 10 public instance methods / properties per class or interface, via
@@ -75,9 +76,10 @@ stylistic rules that would conflict.
 
 Linting is **type-aware** on `.ts`/`.tsx` (`projectService` — needs a `tsconfig.json`
 in the consumer repo); the type-checked rules are switched off for plain `.js`/`.mjs`.
-The structural caps are hard error limits only — function length (80 lines), params
-(7), and per-class/interface counts (10 public instance methods, 10 public instance
-properties). The softer advisory tiers (50 lines / 3 params) are not enforced here.
+The structural caps are hard error limits only — file length (350 lines), function
+length (80 lines), params (7), and per-class/interface counts (10 public instance
+methods, 10 public instance properties). The softer advisory tiers (50 lines / 3
+params) are not enforced here.
 
 ## Comment policy (what the linter enforces)
 

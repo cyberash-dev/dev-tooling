@@ -72,7 +72,7 @@ npx eslint . --fix --rule '{"curly":"error"}'   # braces only
 (narrowing casts, including the `x as unknown as T` escape hatch). Narrow the type or
 fix the source type; `as const` and safe widening stay allowed.
 `@typescript-eslint/no-non-null-assertion` cannot auto-fix every `x!` (e.g. as a
-call argument) — fix those by hand. `max-params` / `max-lines-per-function` /
+call argument) — fix those by hand. `max-lines` / `max-params` / `max-lines-per-function` /
 `max-properties-per-class/max-methods` / `max-properties-per-class/max-properties`
 have no auto-fix; refactor. `no-console` (rewrite to a logger or drop the call),
 `id-denylist` (rename the placeholder identifier), and

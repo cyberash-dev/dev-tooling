@@ -53,5 +53,30 @@ export async function run() {
 		throw new Error(`expected good.ts to be clean, got:\n  ${reported}`);
 	}
 
+	const overByCode = Array.from(
+		{ length: 370 },
+		(_, index) => `export const v${index} = ${index};`,
+	).join("\n");
+	const [overResult] = await eslint.lintText(overByCode, {
+		filePath: "too-long.mjs",
+	});
+	if (!ruleIdsOf(overResult).has("max-lines")) {
+		throw new Error(
+			`expected max-lines to fire on a 370 code-line file, got: ${[...ruleIdsOf(overResult)].join(", ")}`,
+		);
+	}
+
+	const blankLines = "\n".repeat(200);
+	const commentLines = "/* note */\n".repeat(200);
+	const paddedShort = `export const a = 1;\n${blankLines}${commentLines}export const b = 2;\n`;
+	const [paddedResult] = await eslint.lintText(paddedShort, {
+		filePath: "padded.mjs",
+	});
+	if (ruleIdsOf(paddedResult).has("max-lines")) {
+		throw new Error(
+			"expected max-lines NOT to fire when only comments and blank lines exceed 350",
+		);
+	}
+
 	process.stdout.write("base-config: all integration cases passed.\n");
 }

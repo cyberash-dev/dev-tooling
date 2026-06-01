@@ -70,6 +70,10 @@ export default [
 				"val",
 			],
 			"max-params": ["error", 7],
+			"max-lines": [
+				"error",
+				{ max: 350, skipBlankLines: true, skipComments: true },
+			],
 			"max-lines-per-function": [
 				"error",
 				{ max: 80, skipBlankLines: true, skipComments: false },
