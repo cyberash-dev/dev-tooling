@@ -1,6 +1,6 @@
 {
 	"name": "@cyberash-dev/dev-tooling",
-	"version": "7.0.0",
+	"version": "8.0.0",
 	"description": "Shareable ESLint + Prettier config (incl. a comment policy) for TypeScript/JavaScript projects.",
 	"type": "module",
 	"license": "MIT",
