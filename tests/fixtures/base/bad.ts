@@ -7,3 +7,20 @@ export class order_book {
 		return enabled ? tmp : order;
 	}
 }
+
+export enum Status {
+	Pending,
+	Active,
+	Closed,
+}
+
+export function describe(status: Status): string {
+	switch (status) {
+		case Status.Pending:
+			return "pending";
+		case Status.Active:
+			return "active";
+	}
+
+	return "unknown";
+}

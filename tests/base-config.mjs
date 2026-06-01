@@ -44,6 +44,7 @@ export async function run() {
 	assertFires(badRuleIds, "@typescript-eslint/naming-convention");
 	assertFires(badRuleIds, "id-denylist");
 	assertFires(badRuleIds, "no-console");
+	assertFires(badRuleIds, "@typescript-eslint/switch-exhaustiveness-check");
 
 	const good = resultFor(results, "good.ts");
 	if (good.messages.length > 0) {

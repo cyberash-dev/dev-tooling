@@ -77,7 +77,10 @@ call argument) — fix those by hand. `max-lines` / `max-params` / `max-lines-pe
 have no auto-fix; refactor. `no-console` (rewrite to a logger or drop the call),
 `id-denylist` (rename the placeholder identifier), and
 `@typescript-eslint/naming-convention` (rename the type/class or add the
-`is`/`has`/`can`/`should` boolean prefix) also have no auto-fix — rename by hand. Run the
+`is`/`has`/`can`/`should` boolean prefix) also have no auto-fix — rename by hand.
+`@typescript-eslint/switch-exhaustiveness-check` only offers editor suggestions, never a
+`--fix`: add the missing `case` for every enum/union member by hand (no `default` to cover
+them), or a `default` when the `switch` is over a non-union type. Run the
 project's typecheck and tests after, commit separately.
 
 The comment policy rides along in that same ESLint pass. `eslint . --fix` performs every

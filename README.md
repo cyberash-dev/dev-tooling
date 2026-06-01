@@ -54,7 +54,10 @@ The base ESLint config enables (all `error`): `curly` (braces on every
 `@typescript-eslint/no-explicit-any` (no `any` annotations or `as any`),
 `@typescript-eslint/no-unsafe-type-assertion` (no narrowing/unsafe `as` casts,
 including the `x as unknown as T` escape hatch; `as const` and safe widening stay
-allowed), `max-lines` (whole file over 350 lines, excluding blank and
+allowed), `@typescript-eslint/switch-exhaustiveness-check` (a `switch` over an enum or
+union must list a `case` for every member, a `default` neither substitutes for a missing
+member nor is allowed once the switch is already exhaustive, and a `switch` over a
+non-union type must carry a `default`), `max-lines` (whole file over 350 lines, excluding blank and
 comment lines), `max-lines-per-function` (function body over 80
 non-blank lines), `max-params` (more than 7 parameters),
 `max-properties-per-class/max-methods` and `max-properties-per-class/max-properties`

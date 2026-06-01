@@ -88,6 +88,14 @@ export default [
 			"@typescript-eslint/no-explicit-any": "error",
 			"@typescript-eslint/no-non-null-assertion": "error",
 			"@typescript-eslint/no-unsafe-type-assertion": "error",
+			"@typescript-eslint/switch-exhaustiveness-check": [
+				"error",
+				{
+					allowDefaultCaseForExhaustiveSwitch: false,
+					requireDefaultForNonUnion: true,
+					considerDefaultExhaustiveForUnions: false,
+				},
+			],
 			"@typescript-eslint/naming-convention": [
 				"error",
 				{

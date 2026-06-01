@@ -17,3 +17,17 @@ export function check(account: Account): boolean {
 
 	return isActive && id.length > 0;
 }
+
+export enum Direction {
+	Up,
+	Down,
+}
+
+export function labelOf(direction: Direction): string {
+	switch (direction) {
+		case Direction.Up:
+			return "up";
+		case Direction.Down:
+			return "down";
+	}
+}
