@@ -24,3 +24,13 @@ export function describe(status: Status): string {
 
 	return "unknown";
 }
+
+export function classify(code: number): string {
+	if (code === 1) {
+		return "one";
+	} else if (code === 2) {
+		return "two";
+	} else {
+		return "other";
+	}
+}

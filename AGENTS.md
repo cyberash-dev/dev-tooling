@@ -83,6 +83,11 @@ have no auto-fix; refactor. `no-console` (rewrite to a logger or drop the call),
 them), or a `default` when the `switch` is over a non-union type. Run the
 project's typecheck and tests after, commit separately.
 
+`unicorn/prefer-switch` (an `if`/`else if` chain testing one variable against constants,
+firing from the first `if`/`else if`/`else`) **is** auto-fixable: `eslint . --fix` rewrites
+the chain into a `switch`. Review the result (the `default` branch, no accidental
+fall-through) and run the typecheck and tests before committing.
+
 The comment policy rides along in that same ESLint pass. `eslint . --fix` performs every
 mechanical comment rewrite: rewrites `//` to `/* */` and merges runs of full-line `//`
 (`no-line-comment`), drops decorative banner lines (`no-decorative-comment`), removes pure

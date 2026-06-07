@@ -45,6 +45,7 @@ export async function run() {
 	assertFires(badRuleIds, "id-denylist");
 	assertFires(badRuleIds, "no-console");
 	assertFires(badRuleIds, "@typescript-eslint/switch-exhaustiveness-check");
+	assertFires(badRuleIds, "unicorn/prefer-switch");
 
 	const good = resultFor(results, "good.ts");
 	if (good.messages.length > 0) {

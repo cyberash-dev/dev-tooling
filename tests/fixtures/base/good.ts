@@ -31,3 +31,11 @@ export function labelOf(direction: Direction): string {
 			return "down";
 	}
 }
+
+export function pick(code: number): string {
+	if (code === 1) {
+		return "one";
+	}
+
+	return "other";
+}

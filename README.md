@@ -57,7 +57,11 @@ including the `x as unknown as T` escape hatch; `as const` and safe widening sta
 allowed), `@typescript-eslint/switch-exhaustiveness-check` (a `switch` over an enum or
 union must list a `case` for every member, a `default` neither substitutes for a missing
 member nor is allowed once the switch is already exhaustive, and a `switch` over a
-non-union type must carry a `default`), `max-lines` (whole file over 350 lines, excluding blank and
+non-union type must carry a `default`), `unicorn/prefer-switch` (an `if`/`else if` chain
+testing one variable against constants must be a `switch`; fires from the first
+`if`/`else if`/`else`, via
+[`eslint-plugin-unicorn`](https://github.com/sindresorhus/eslint-plugin-unicorn)),
+`max-lines` (whole file over 350 lines, excluding blank and
 comment lines), `max-lines-per-function` (function body over 80
 non-blank lines), `max-params` (more than 7 parameters),
 `max-properties-per-class/max-methods` and `max-properties-per-class/max-properties`

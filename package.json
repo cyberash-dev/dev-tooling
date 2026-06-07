@@ -39,6 +39,7 @@
 		"eslint-config-prettier": "9.1.2",
 		"eslint-plugin-comment-policy": "0.4.0",
 		"eslint-plugin-max-properties-per-class": "1.0.1",
+		"eslint-plugin-unicorn": "64.0.0",
 		"globals": "15.15.0",
 		"typescript": "5.9.3",
 		"typescript-eslint": "8.60.0"

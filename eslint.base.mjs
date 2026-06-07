@@ -4,6 +4,7 @@ import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
 import maxPropsPerClass from "eslint-plugin-max-properties-per-class";
 import commentPolicy from "eslint-plugin-comment-policy";
+import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import specAnchor from "./eslint-rules/index.mjs";
 import { SDD_PROTECTED } from "./eslint-rules/sdd-grammar.mjs";
 
@@ -52,6 +53,12 @@ export default [
 		plugins: { "spec-anchor": specAnchor },
 		rules: {
 			"spec-anchor/no-dead-spec-anchor": "error",
+		},
+	},
+	{
+		plugins: { unicorn: eslintPluginUnicorn },
+		rules: {
+			"unicorn/prefer-switch": ["error", { minimumCases: 2 }],
 		},
 	},
 	{
